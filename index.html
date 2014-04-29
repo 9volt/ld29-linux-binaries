@@ -1,0 +1,42 @@
+<html ng-app>
+    <head>
+        <script src="angular.min.js"></script>
+        <script src="jquery-2.1.0.min.js"></script>
+        <script src="bootstrap.min.js"></script>
+        <script src="games.js"></script>
+        <script src="app.js"></script>
+        <link rel="stylesheet" href="bootstrap.min.css">
+    </head>
+    <body>
+        <div ng-controller="ListCtrl">
+            <div class="input-group">
+                <span class="input-group-addon">Game Name: </span>
+                <input ng-model="query" class="form-control">
+            </div>
+            <div class="btn-group" ng-repeat="o in oses">
+                <button ng-class="{active: osActive(o)}"
+                        ng-click="toggle(o)"
+                        type="button"
+                        class="btn btn-default">
+                    {{o}}
+                </button>
+            </div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <td>name</td>
+                        <td ng-repeat="o in oses">
+                            <span>{{o}}</span>
+                        </td>
+                    </tr>
+                </thead>
+                <tr ng-repeat="g in games | filter:query | filter:osFilter">
+                    <td><a href="{{g.url}}">{{g.name}}</a></td>
+                    <td ng-repeat="o in oses">
+                        <span ng-repeat="b in g.binaries" ng-if="o == b">x</span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </body>
+</html>
