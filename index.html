@@ -33,7 +33,7 @@
                 <tr ng-repeat="g in games | filter:query | filter:osFilter">
                     <td><a href="{{g.url}}">{{g.name}}</a></td>
                     <td ng-repeat="o in oses">
-                        <span ng-repeat="b in g.binaries" ng-if="o == b">x</span>
+                        <span ng-if="hasOS(g, o)"><a href="{{osURL(g, o)}}">[link]</a></span>
                     </td>
                 </tr>
             </table>
