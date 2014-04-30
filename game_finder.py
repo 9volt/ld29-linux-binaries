@@ -17,7 +17,7 @@ def games_on_page(url):
 
 game_pages = []
 
-for i in range(20):
+for i in range(105):
     event_name = 'ludum-dare-29'
     entries_url = "http://www.ludumdare.com/compo/{}/?action=preview&etype=&start={}".format(event_name, i*24)
     game_pages += games_on_page(entries_url)
