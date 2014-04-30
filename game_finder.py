@@ -2,10 +2,10 @@ import json
 import requests
 import re
 
-entry_re = re.compile(r"<a href='\?action=(\w+)&uid=([0-9]+)'><img src='([^']*)'><div class='title'><i>(.*?)</i></div>(.*?)</a></div>")
+entry_re = re.compile(r"<a href='\?action=(\w+?)&uid=([0-9]+)' rel=\"dofollow\"><img src='([^']*)'><div class='title'><i>(.*?)</i></div>(.*?)</a></div>")
 
 find_links_re = re.compile(r"<p class='links'>(.*?)</p>")
-platform_re = re.compile(r"<a href=\"([^\"]*)\" target='_blank'>(.*?)</a>")
+platform_re = re.compile(r"<a href=\"([^\"]*)\" target='_blank' rel=\"nofollow\">(.*?)</a>")
 
 games = []
 
@@ -17,7 +17,7 @@ def games_on_page(url):
 
 game_pages = []
 
-for i in range(105):
+for i in range(20):
     event_name = 'ludum-dare-29'
     entries_url = "http://www.ludumdare.com/compo/{}/?action=preview&etype=&start={}".format(event_name, i*24)
     game_pages += games_on_page(entries_url)
@@ -40,12 +40,15 @@ for entry in game_pages:
     if len(links) > 0:
         r = platform_re.findall(links[0])
         g = {'name':entry[3], 'author':entry[4], 'url':url}
-        u, t = zip(*r)
-        g['binaries'] = list(map(cleaner, t))
-        g['binary_url'] = u
+        if len(r) > 0:
+            u, t = zip(*r)
+            g['binaries'] = list(map(cleaner, t))
+            g['binary_url'] = u
+        else:
+            print("no platforms found {}".format(entry[1]))
         games.append(g)
     else:
-        print("could not find links")
+        print("could not find links: {}".format(entry[1]))
 
 with open('games.js', 'w') as f:
     f.write("var game_json = '")
