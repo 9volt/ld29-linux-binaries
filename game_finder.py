@@ -11,11 +11,13 @@ games = []
 
 def games_on_page(url):
     f = requests.get(url)
+    if(f.status_code != 200):
+        print('failed url grabbing')
     return entry_re.findall(f.text)
 
 game_pages = []
 
-for i in range(10):
+for i in range(105):
     event_name = 'ludum-dare-29'
     entries_url = "http://www.ludumdare.com/compo/{}/?action=preview&etype=&start={}".format(event_name, i*24)
     game_pages += games_on_page(entries_url)
@@ -30,9 +32,10 @@ def cleaner(s):
     return 'other'
 
 for entry in game_pages:
-    print(entry[3])
     url = 'http://www.ludumdare.com/compo/ludum-dare-29/?action=preview&uid={}'.format(entry[1])
     f = requests.get(url)
+    if f.status_code != 200:
+        print('failed game page')
     links = find_links_re.findall(f.text)
     if len(links) > 0:
         r = platform_re.findall(links[0])
